@@ -1,0 +1,251 @@
+import 'package:flutter/material.dart';
+import 'package:taxis/core/user_session.dart';
+
+void main() => runApp(const MatchBitApp());
+
+class MatchBitApp extends StatelessWidget {
+  const MatchBitApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int currentIndex = 0;
+
+  final List<String> deportes = [
+    'Pádel', 'Tenis', 'Fútbol', 'Básquet', 'Gimnasio', 'Yoga', 'Natación', 'CrossFit'
+  ];
+
+  final List<Map<String, dynamic>> canchasDestacadas = [
+    {'nombre':'Club de Pádel Elite','deporte':'Pádel','ubicacion':'Col. Patria Nueva','precio':180,'rating':4.9,'turnos':8,'color':Colors.green[100]},
+    {'nombre':'Tennis Garden','deporte':'Tenis','ubicacion':'Colonia Centro','precio':150,'rating':4.7,'turnos':5,'color':Colors.blue[100]},
+    {'nombre':'Cancha Fútbol 7','deporte':'Fútbol','ubicacion':'Libramiento Norte','precio':600,'rating':4.8,'turnos':3,'color':Colors.yellow[100]},
+    {'nombre':'Sport Center MX','deporte':'Pádel','ubicacion':'Col. Jardines','precio':160,'rating':4.6,'turnos':12,'color':Colors.purple[100]},
+    {'nombre':'Cancha Pro Tenis','deporte':'Tenis','ubicacion':'Av. Central','precio':130,'rating':4.5,'turnos':0,'color':Colors.pink[100]},
+    {'nombre':'Futbolito Express','deporte':'Fútbol','ubicacion':'Blvd. Comitán','precio':500,'rating':4.9,'turnos':6,'color':Colors.green[200]},
+  ];
+
+  final List<Map<String, dynamic>> eventos = [
+    {'fecha':'4','mes':'ABR','nombre':'Torneo Abierto de Pádel','deporte':'Pádel','tipo':'Torneo','precio':300,'lugares':24},
+    {'fecha':'11','mes':'ABR','nombre':'Carrera 5K Ciudad Verde','deporte':'Running','tipo':'Carrera','precio':150,'lugares':200},
+    {'fecha':'18','mes':'ABR','nombre':'Clínica de Tenis para Adultos','deporte':'Tenis','tipo':'Clínica','precio':200,'lugares':12},
+    {'fecha':'25','mes':'ABR','nombre':'Torneo Fútbol 7 Empresarial','deporte':'Fútbol','tipo':'Torneo','precio':2000,'lugares':16},
+    {'fecha':'2','mes':'MAY','nombre':'Yoga en el Parque','deporte':'Yoga','tipo':'Clase','precio':0,'lugares':30},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _header(),
+            _searchBar(),
+            _deportesSection(),
+            _canchasDestacadasSection(),
+            _eventosSection(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (i) => setState(() => currentIndex = i),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore_rounded), label: 'Explorar'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today_rounded), label: 'Reservas'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Perfil'),
+        ],
+        selectedItemColor: Colors.deepPurple,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+      ),
+    );
+  }
+
+  Widget _header() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: const [
+              Icon(Icons.sports_tennis, color: Colors.deepPurple),
+              SizedBox(width: 8),
+              Text('MatchBit', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            ]),
+            CircleAvatar(child: Text('C')
+
+
+
+
+            ),
+
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text('Buenas tardes, ${UserSession().nombre} 👋',
+            style: TextStyle(fontSize: 14, color: Colors.grey)),
+        const SizedBox(height: 4),
+        const Text('¿Qué deporte jugamos hoy?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+      ]),
+    );
+  }
+
+  Widget _searchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Buscar canchas, clubs, eventos...',
+          prefixIcon: const Icon(Icons.search_rounded),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _deportesSection() {
+    return SizedBox(
+      height: 80,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: deportes.length,
+        itemBuilder: (_, i) {
+          return Container(
+            margin: const EdgeInsets.only(right: 12),
+            child: Column(children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.deepPurple[50],
+                child: Text(deportes[i][0]), // Puedes cambiar a iconos
+              ),
+              const SizedBox(height: 4),
+              Text(deportes[i], style: const TextStyle(fontSize: 12)),
+            ]),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _canchasDestacadasSection() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Text('Canchas destacadas', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      ),
+      SizedBox(
+        height: 160,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          itemCount: canchasDestacadas.length,
+          itemBuilder: (_, i) {
+            final c = canchasDestacadas[i];
+            return Container(
+              width: 140,
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: c['color'],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.sports_tennis),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: c['turnos'] > 0 ? Colors.green[200] : Colors.red[200],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        c['turnos'] > 0 ? '${c['turnos']} turnos' : 'Sin disponibilidad',
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(c['nombre'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text(c['ubicacion'], style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                const Spacer(),
+                Text('\$${c['precio']}/hr', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ]),
+            );
+          },
+        ),
+      ),
+    ]);
+  }
+
+  Widget _eventosSection() {
+    return Expanded(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text('Próximos eventos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            itemCount: eventos.length,
+            itemBuilder: (_, i) {
+              final e = eventos[i];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 8),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: ListTile(
+                  leading: Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(e['mes'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        Text(e['fecha'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                  title: Text(e['nombre'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  subtitle: Text('${e['deporte']} • ${e['tipo']}'),
+                  trailing: Text(e['precio'] == 0 ? 'Gratis' : '\$${e['precio']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              );
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
